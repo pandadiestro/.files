@@ -1,7 +1,20 @@
 {
-    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/15.0.6/clangd_15.0.6/bin/clangd",
     "texlab.build.executable": "pdflatex",
     "texlab.build.onSave": true,
     "texlab.build.forwardSearchAfter": true,
-    "diagnostic.refreshOnInsertMode": true
+    "diagnostic.refreshOnInsertMode": true,
+    "inlayHint.enable": false,
+    "languageserver": {
+      "ccls": {
+        "command": "ccls",
+        "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
+        "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+        "initializationOptions": {
+            "cache": {
+              "directory": "/tmp/ccls"
+            }
+          }
+      }
+    }
+
 }

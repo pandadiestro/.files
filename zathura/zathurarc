@@ -1,0 +1,8 @@
+set selection-clipboard clipboard
+
+set show-recent 1
+set show-hidden true
+
+set guioptions ""
+
+set font "MesloLGS\ NF 10"

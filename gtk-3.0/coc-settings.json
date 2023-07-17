@@ -1,6 +1,0 @@
-{
-    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/15.0.6/clangd_15.0.6/bin/clangd",
-    "texlab.build.executable": "pdflatex",
-    "texlab.build.onSave": true,
-    "diagnostic.refreshOnInsertMode": true
-}
