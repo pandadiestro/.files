@@ -15,4 +15,4 @@ You probably want to have set up at least one toolbar configuration file before 
 
 And add a custom one.
  
-> *currently a work in progress*
+###### *currently a work in progress*
