@@ -1,17 +1,19 @@
 #pulseaudio-button * {
-        -gtk-icon-transform: scale(.6);
+    -gtk-icon-transform: scale(.6);
+    border-radius: 0px;
 }
 
 #xfce4-notification-plugin * {
-        -gtk-icon-transform: scale(.6);
+    -gtk-icon-transform: scale(.6);
 }
 
 #xfce4-power-manager-plugin * {
-        -gtk-icon-transform: scale(.6);
+    -gtk-icon-transform: scale(.6);
+    border-radius: 0px;
 }
 
 #whiskermenu-button * {
-        -gtk-icon-transform: scale(.8);
+    -gtk-icon-transform: scale(.8);
 }
 
 #showdesktop-button * {
@@ -19,16 +21,20 @@
 }
 
 .xfce4-panel {
-    border-radius: 10px;
-}
-
-.xfce4-panel * {
     font-family: "Consolas";
+    font-size: 13px;
 }
 
+#XfcePanelWindow { 
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+}
+
+/*
 VteTerminal, vte-terminal {
         padding-left: 0px;
         padding-right: 3px;
         padding-top: 0px;
         padding-bottom: 19px;
 }
+*/

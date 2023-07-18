@@ -1,7 +1,7 @@
 set number
 set relativenumber
 
-set smartindent
+set autoindent
 set expandtab
 
 set shiftwidth=4
@@ -16,23 +16,46 @@ set hidden
 set mouse=a
 set keymodel=startsel
 
+" May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
+" utf-8 byte sequence
+set encoding=utf-8
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
+" delays and poor user experience
+set updatetime=300
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved
+set signcolumn=yes
+
 au VimLeave * set guicursor=a:ver100
 
 call plug#begin()
 
 Plug 'preservim/nerdtree' "File tree plugin
+Plug 'rafi/awesome-vim-colorschemes' "Retro Scheme
 Plug 'vim-airline/vim-airline' "Status bar
 Plug 'vim-airline/vim-airline-themes' "airline themes
+
 Plug 'ap/vim-css-color' "CSS Color Preview
-Plug 'rafi/awesome-vim-colorschemes' "Retro Scheme
 Plug 'ryanoasis/vim-devicons' "Developer Icons
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc Completion
+
 Plug 'mg979/vim-visual-multi' "multiple cursors 
+Plug 'pandadiestro/nvim-markdown-preview'
+
+Plug 'itchyny/vim-gitbranch' "git branch name for the status line
 Plug 'lambdalisue/suda.vim' "sudo
 Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
 Plug 'tribela/vim-transparent' "transparent bg
 
 call plug#end()
+
 
 nnoremap <silent> <C-f> :NERDTreeFocus<CR>
 nnoremap <silent> <C-t> :NERDTreeToggle<CR>
@@ -43,11 +66,14 @@ xnoremap <BS> x
 nmap <silent> <C-o> :bp <CR>
 nmap <silent> <C-p> :bn <CR>
 
-:colorscheme jellybeans
+noremap <C-Right> e
+inoremap <C-Right> <C-o>e<C-o>l
 
 nmap <silent> <M-S-T> :TransparentToggle <CR>
+imap <silent> <C-del> <C-o>dw
 
-
+colorscheme jellybeans
+let g:nvim_markdown_preview_format = 'markdown'
 let g:coc_disable_startup_warning = 1
 let NERDTreeShowHidden = 1
 
@@ -83,32 +109,33 @@ noremap <silent> <c-s-up> :call <SID>swap_up()<CR>
 noremap <silent> <c-s-down> :call <SID>swap_down()<CR>
 
 " --------- duplicate lines in normal mode ------------
-nmap <silent> <C-S-D> :t.<CR>
+nmap <C-D> :t.<CR>
 
 " ------------ texlab config -------
 hi default CocUnderline cterm=underline gui=undercurl
 
 " --------- airline config -----------
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='distinguished'
+let g:airline_theme='minimalist'
 
-" NOTE: stolen config hehe ------ coc repo settings ---------
-" May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
-" utf-8 byte sequence
-set encoding=utf-8
-" Some servers have issues with backup files, see #649
-set nobackup
-set nowritebackup
+"show git branch without fugitive (bloated)
 
-" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
-" delays and poor user experience
-set updatetime=300
+function! Get_branch_name()
+   let name = gitbranch#name()
+   if name == ""
+       return ""
+   else
+       return " @ " . name
+   endif
+endfunction
 
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved
-set signcolumn=yes
+call airline#parts#define_function('lite-branch', 'Get_branch_name')
+let g:airline_section_c = airline#section#create_right(['%t','lite-branch'])
 
+" NOTE: stolen config hehe 
+" ---------- coc settings ---------
 let g:coc_node_path = "/home/bauer/.nvm/versions/node/v18.15.0/bin/node" 
+
 " Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
 " no select by `"suggest.noselect": true` in your configuration file
