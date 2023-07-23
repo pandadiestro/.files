@@ -47,10 +47,9 @@ Plug 'ryanoasis/vim-devicons' "Developer Icons
 Plug 'mg979/vim-visual-multi' "multiple cursors 
 Plug 'pandadiestro/nvim-markdown-preview'
 
-Plug 'itchyny/vim-gitbranch' "git branch name for the status line
 Plug 'lambdalisue/suda.vim' "sudo
 Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
-Plug 'tribela/vim-transparent' "transparent bg
+"Plug 'tribela/vim-transparent' "transparent bg
 
 Plug 'sainnhe/gruvbox-material' "nice gruvbox material theme
 
