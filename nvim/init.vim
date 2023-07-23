@@ -36,15 +36,13 @@ au VimLeave * set guicursor=a:ver100
 
 call plug#begin()
 
+"Plug 'rafi/awesome-vim-colorschemes' "interesting colorschemes
+
 Plug 'preservim/nerdtree' "File tree plugin
-Plug 'rafi/awesome-vim-colorschemes' "Retro Scheme
-Plug 'vim-airline/vim-airline' "Status bar
-Plug 'vim-airline/vim-airline-themes' "airline themes
+Plug 'nvim-lualine/lualine.nvim' "faster statusline
 
 Plug 'ap/vim-css-color' "CSS Color Preview
 Plug 'ryanoasis/vim-devicons' "Developer Icons
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc Completion
 
 Plug 'mg979/vim-visual-multi' "multiple cursors 
 Plug 'pandadiestro/nvim-markdown-preview'
@@ -54,8 +52,11 @@ Plug 'lambdalisue/suda.vim' "sudo
 Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
 Plug 'tribela/vim-transparent' "transparent bg
 
-call plug#end()
+Plug 'sainnhe/gruvbox-material' "nice gruvbox material theme
 
+Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc Completion
+
+call plug#end()
 
 nnoremap <silent> <C-f> :NERDTreeFocus<CR>
 nnoremap <silent> <C-t> :NERDTreeToggle<CR>
@@ -72,10 +73,23 @@ inoremap <C-Right> <C-o>e<C-o>l
 nmap <silent> <M-S-T> :TransparentToggle <CR>
 imap <silent> <C-del> <C-o>dw
 
-colorscheme jellybeans
 let g:nvim_markdown_preview_format = 'markdown'
 let g:coc_disable_startup_warning = 1
 let NERDTreeShowHidden = 1
+let g:NERDTreeStatusline = -1
+
+"------ gruvbox colorscheme ---------
+
+if has('termguicolors')
+  set termguicolors
+endif
+let g:gruvbox_material_foreground='mix'
+let g:gruvbox_material_disable_italic_comment=1
+let g:gruvbox_material_transparent_background=1
+let g:gruvbox_material_better_performance=1
+let g:gruvbox_material_current_word='bold'
+
+colorscheme gruvbox-material
 
 " ----- move lines -----------
 function! s:swap_lines(n1, n2)
@@ -114,23 +128,20 @@ nmap <C-D> :t.<CR>
 " ------------ texlab config -------
 hi default CocUnderline cterm=underline gui=undercurl
 
-" --------- airline config -----------
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='minimalist'
+" ---------lualine config-----------
 
-"show git branch without fugitive (bloated)
-
-function! Get_branch_name()
-   let name = gitbranch#name()
-   if name == ""
-       return ""
-   else
-       return " @ " . name
-   endif
-endfunction
-
-call airline#parts#define_function('lite-branch', 'Get_branch_name')
-let g:airline_section_c = airline#section#create_right(['%t','lite-branch'])
+lua << END
+require('lualine').setup{
+    options = {
+        theme = 'auto',
+        section_separators = '',
+        component_separators = '',
+    },
+    tabline = {
+        lualine_a = {'buffers'}
+    }
+}
+END
 
 " NOTE: stolen config hehe 
 " ---------- coc settings ---------
