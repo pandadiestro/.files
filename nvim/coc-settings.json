@@ -3,19 +3,20 @@
     "texlab.build.onSave": true,
     "texlab.build.forwardSearchAfter": true,
     "diagnostic.refreshOnInsertMode": true,
-    "inlayHint.enable": true,
-    "diagnostic.virtualText": true,
+    "inlayHint.enable": false,
+    "diagnostic.virtualText": false,
     "languageserver": {
-    "ccls": {
-        "command": "ccls",
-        "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
-        "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
-        "initializationOptions": {
-            "client": {
-                "snippetSupport": true
-            },
-            "cache": {
-                "directory": "/tmp/ccls"
+        "ccls": {
+            "command": "ccls",
+            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
+            "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+            "initializationOptions": {
+                "client": {
+                    "snippetSupport": true
+                },
+
+                "cache": {
+                    "directory": "/tmp/ccls"
                 }
             }
         }

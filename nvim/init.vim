@@ -41,10 +41,7 @@ call plug#begin()
 Plug 'preservim/nerdtree' "File tree plugin
 Plug 'nvim-lualine/lualine.nvim' "faster statusline
 
-Plug 'ap/vim-css-color' "CSS Color Preview
-Plug 'ryanoasis/vim-devicons' "Developer Icons
-
-Plug 'mg979/vim-visual-multi' "multiple cursors 
+Plug 'mg979/vim-visual-multi' "multiple cursors
 Plug 'pandadiestro/nvim-markdown-preview'
 
 Plug 'lambdalisue/suda.vim' "sudo
@@ -54,6 +51,9 @@ Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
 Plug 'sainnhe/gruvbox-material' "nice gruvbox material theme
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc Completion
+
+Plug 'ap/vim-css-color' "CSS Color Preview
+Plug 'ryanoasis/vim-devicons' "Developer Icons
 
 call plug#end()
 
@@ -121,6 +121,14 @@ endfunction
 noremap <silent> <c-s-up> :call <SID>swap_up()<CR>
 noremap <silent> <c-s-down> :call <SID>swap_down()<CR>
 
+"NOTE: multiline movement support, thanks LunarVim
+
+lua << END
+local opts = { noremap = true, silent = true }
+vim.keymap.set("v", "<C-S-Up>", ":m '<-2<CR>gv=gv", opts)
+vim.keymap.set("v", "<C-S-Down>", ":m '>+1<CR>gv=gv", opts)
+END
+
 " --------- duplicate lines in normal mode ------------
 nmap <C-D> :t.<CR>
 
@@ -128,13 +136,29 @@ nmap <C-D> :t.<CR>
 hi default CocUnderline cterm=underline gui=undercurl
 
 " ---------lualine config-----------
-
 lua << END
+vim.fn.matchadd('errorMsg', [[\s\+$]])
+
 require('lualine').setup{
     options = {
+        disabled_filetypes = { 'nerdtree' },
         theme = 'auto',
         section_separators = '',
         component_separators = '',
+    },
+    sections = {
+        lualine_b = {
+            'branch',
+            'diff',
+            {
+                'diagnostics',
+                sources = { 'nvim_diagnostic', 'coc' },
+                sections = { 'error', 'warn', 'info', 'hint' },
+                symbols = {error = 'E~', warn = 'W~', info = 'I~', hint = 'H~'},
+                update_in_insert = true,
+                colored = false
+            }
+        }
     },
     tabline = {
         lualine_a = {'buffers'}
