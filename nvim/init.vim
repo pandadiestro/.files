@@ -12,7 +12,6 @@ set backspace=2
 set clipboard+=unnamedplus
 
 set hidden
-
 set mouse=a
 set keymodel=startsel
 
@@ -20,7 +19,7 @@ set keymodel=startsel
 " utf-8 byte sequence
 set encoding=utf-8
 
-" Some servers have issues with backup files, see #649
+" set to not generate backups to prevent problems
 set nobackup
 set nowritebackup
 
@@ -32,56 +31,70 @@ set updatetime=300
 " diagnostics appear/become resolved
 set signcolumn=yes
 
+set guicursor=i:block
+" I use a vertical bar cursor in my terminal as default
 au VimLeave * set guicursor=a:ver100
 
 call plug#begin()
 
 "Plug 'rafi/awesome-vim-colorschemes' "interesting colorschemes
-
-Plug 'preservim/nerdtree' "File tree plugin
-Plug 'nvim-lualine/lualine.nvim' "faster statusline
-
-Plug 'mg979/vim-visual-multi' "multiple cursors
-Plug 'pandadiestro/nvim-markdown-preview'
-
-Plug 'lambdalisue/suda.vim' "sudo
-Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
 "Plug 'tribela/vim-transparent' "transparent bg
-
-Plug 'sainnhe/gruvbox-material' "nice gruvbox material theme
-
+"Plug 'preservim/nerdtree' "File tree plugin
+Plug 'nvim-lualine/lualine.nvim' "faster statusline
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc Completion
 
+Plug 'mg979/vim-visual-multi' "multiple cursors
+Plug 'sainnhe/gruvbox-material' "nice gruvbox material theme
 Plug 'ap/vim-css-color' "CSS Color Preview
 Plug 'ryanoasis/vim-devicons' "Developer Icons
 
+Plug 'lambdalisue/suda.vim' "sudo
+Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
+Plug 'pandadiestro/nvim-markdown-preview'
+Plug 'chaoren/vim-wordmotion'
+
 call plug#end()
 
-nnoremap <silent> <C-f> :NERDTreeFocus<CR>
-nnoremap <silent> <C-t> :NERDTreeToggle<CR>
+"nnoremap <silent> <C-f> :NERDTreeFocus<CR>
+"nnoremap <silent> <C-t> :NERDTreeToggle<CR>
+"let NERDTreeShowHidden = 1
+"let g:NERDTreeStatusline = -1
+
 inoremap <silent> <C-Z> <C-O>u
 xnoremap <silent> <Tab> >gv
 xnoremap <silent> <S-Tab> <gv
+
 xnoremap <BS> x
+
 nmap <silent> <C-o> :bp <CR>
 nmap <silent> <C-p> :bn <CR>
 
 noremap <C-Right> e
 inoremap <C-Right> <C-o>e<C-o>l
 
-nmap <silent> <M-S-T> :TransparentToggle <CR>
 imap <silent> <C-del> <C-o>dw
 
 let g:nvim_markdown_preview_format = 'markdown'
 let g:coc_disable_startup_warning = 1
-let NERDTreeShowHidden = 1
-let g:NERDTreeStatusline = -1
+let g:netrw_liststyle = 3
+let g:netrw_fastbrowse = 0
+let g:netrw_altfile = 0
+
+autocmd FileType netrw setl bufhidden=delete
+
+nnoremap <silent> <M-w> :bw<CR>
+nnoremap <silent> <C-t> :Ex<CR>
+
+"---------some useful stuff-----------------
+command JSONpretty %!jq .
+command Words !wc -w %
+
 
 "------ gruvbox colorscheme ---------
-
 if has('termguicolors')
   set termguicolors
 endif
+
 let g:gruvbox_material_foreground='mix'
 let g:gruvbox_material_disable_italic_comment=1
 let g:gruvbox_material_transparent_background=1
@@ -122,12 +135,8 @@ noremap <silent> <c-s-up> :call <SID>swap_up()<CR>
 noremap <silent> <c-s-down> :call <SID>swap_down()<CR>
 
 "NOTE: multiline movement support, thanks LunarVim
-
-lua << END
-local opts = { noremap = true, silent = true }
-vim.keymap.set("v", "<C-S-Up>", ":m '<-2<CR>gv=gv", opts)
-vim.keymap.set("v", "<C-S-Down>", ":m '>+1<CR>gv=gv", opts)
-END
+vnoremap <silent><C-S-Up> :m '<-2<CR>gv=gv
+vnoremap <silent><C-S-Down> :m '>+1<CR>gv=gv
 
 " --------- duplicate lines in normal mode ------------
 nmap <C-D> :t.<CR>
@@ -141,7 +150,7 @@ vim.fn.matchadd('errorMsg', [[\s\+$]])
 
 require('lualine').setup{
     options = {
-        disabled_filetypes = { 'nerdtree' },
+        disabled_filetypes = { 'nerdtree', 'vim-plug', 'netrw' },
         theme = 'auto',
         section_separators = '',
         component_separators = '',
@@ -161,14 +170,14 @@ require('lualine').setup{
         }
     },
     tabline = {
-        lualine_a = {'buffers'}
+        lualine_a = { 'buffers' }
     }
 }
 END
 
-" NOTE: stolen config hehe 
+" NOTE: stolen config hehe
 " ---------- coc settings ---------
-let g:coc_node_path = "/home/bauer/.nvm/versions/node/v18.15.0/bin/node" 
+let g:coc_node_path = "/home/bauer/.nvm/versions/node/v18.15.0/bin/node"
 
 " Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
