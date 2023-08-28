@@ -1,0 +1,37 @@
+--- st.c
++++ st.c
+@@ -1300,25 +1391,25 @@ tsetchar(Rune u, const Glyph *attr, int x, int y)
+ 	   BETWEEN(u, 0x41, 0x7e) && vt100_0[u - 0x41])
+ 		utf8decode(vt100_0[u - 0x41], &u, UTF_SIZ);
+ 
+-	if (term.line[y][x].mode & ATTR_WIDE) {
++	if (line[x].mode & ATTR_WIDE) {
+ 		if (x+1 < term.col) {
+-			term.line[y][x+1].u = ' ';
+-			term.line[y][x+1].mode &= ~ATTR_WDUMMY;
++			line[x+1].u = ' ';
++			line[x+1].mode &= ~ATTR_WDUMMY;
+ 		}
+-	} else if (term.line[y][x].mode & ATTR_WDUMMY) {
+-		term.line[y][x-1].u = ' ';
+-		term.line[y][x-1].mode &= ~ATTR_WIDE;
++	} else if (line[x].mode & ATTR_WDUMMY) {
++		line[x-1].u = ' ';
++		line[x-1].mode &= ~ATTR_WIDE;
+ 	}
+ 
+ 	term.dirty[y] = 1;
+-	term.line[y][x] = *attr;
+-	term.line[y][x].u = u;
++	line[x] = *attr;
++	line[x].u = u;
+ }
+ 
+ void
+ tclearregion(int x1, int y1, int x2, int y2)
+ {
+-	int x, y, temp;
++	int x, y, L, S, temp;
+ 	Glyph *gp;
+ 
+ 	if (x1 > x2)
