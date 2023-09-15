@@ -57,6 +57,12 @@ static double minlatency = 8;
 static double maxlatency = 33;
 
 /*
+ * Synchronized-Update timeout in ms
+ * https://gitlab.com/gnachman/iterm2/-/wikis/synchronized-updates-spec
+ */
+static uint su_timeout = 200;
+
+/*
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
  * attribute.
  */
@@ -73,7 +79,7 @@ static unsigned int cursorthickness = 2;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw = 0;
+const int boxdraw = 1;
 const int boxdraw_bold = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
@@ -106,7 +112,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* bg opacity */
-float alpha = 0.95;
+float alpha = 0.9;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -136,7 +142,7 @@ static const char *colorname[] = {
 	"#cccccc",
 	"#555555",
 	"gray90", /* default foreground colour */
-	"black", /* default background colour */
+	"#090909", /* default background colour */
 };
 
 
@@ -191,6 +197,8 @@ static uint forcemousemod = ShiftMask;
  */
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release */
+	{ XK_ANY_MOD,           Button4, kscrollup,      {.i = 1},		0, /* !alt */ -1 },
+	{ XK_ANY_MOD,           Button5, kscrolldown,    {.i = 1},		0, /* !alt */ -1 },
 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
@@ -216,6 +224,7 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+	{ TERMMOD,              XK_Return,      newterm,        {.i =  0} },
 	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
 	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
 };
@@ -330,6 +339,7 @@ static uint ignoremod = Mod2Mask|XK_SWITCH_MOD;
  * This is the huge key array which defines all compatibility to the Linux
  * world. Please decide about changes wisely.
  */
+
 static Key key[] = {
 	/* keysym           mask            string      appkey appcursor */
 	{ XK_KP_Home,       ShiftMask,      "\033[2J",       0,   -1},
@@ -579,7 +589,8 @@ static Key key[] = {
 	{ XK_KP_Insert,    Mod1Mask|ControlMask,           "\033[158;7u", 0,  0},
 	{ XK_KP_Insert,    Mod1Mask|ControlMask|ShiftMask, "\033[158;8u", 0,  0},
 	{ XK_KP_Insert,    Mod1Mask|ShiftMask,             "\033[158;4u", 0,  0},
-	{ XK_KP_Delete,    XK_NO_MOD,                      "\033[P",     -1,  0},
+	{ XK_KP_Delete,    XK_NO_MOD,                      "\033[3~",     -1,  0},
+	{ XK_KP_Delete,    XK_ANY_MOD,                      "\033[3~",     -1,  0},
 	{ XK_KP_Delete,    XK_NO_MOD,                      "\033[3~",    +1,  0},
 	{ XK_KP_Delete,    ControlMask|ShiftMask,          "\033[159;6u", 0,  0},
 	{ XK_KP_Delete,    Mod1Mask,                       "\033[159;3u", 0,  0},
@@ -803,7 +814,7 @@ static Key key[] = {
 	{ XK_Menu,         Mod1Mask|ControlMask|ShiftMask, "\033[103;8u", 0,  0},
 	{ XK_Menu,         Mod1Mask|ShiftMask,             "\033[103;4u", 0,  0},
 	{ XK_Menu,         ShiftMask,                      "\033[103;2u", 0,  0},
-	{ XK_Delete,       XK_NO_MOD,                      "\033[P",     -1,  0},
+	{ XK_Delete,       XK_NO_MOD,                      "\033[3~",     -1,  0},
 	{ XK_Delete,       XK_NO_MOD,                      "\033[3~",    +1,  0},
 	{ XK_Delete,       ControlMask|ShiftMask,          "\033[255;6u", 0,  0},
 	{ XK_Delete,       Mod1Mask,                       "\033[255;3u", 0,  0},
