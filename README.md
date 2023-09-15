@@ -2,13 +2,13 @@
 
 Personal dotfiles and general configuration files
 
-### As for:
+## As for:
 
-1. Neovim
+### `Neovim`
 
 This version of my neovim .init uses the [vim-plug](https://github.com/junegunn/vim-plug) plugin manager, so be sure to have it set up before starting it.
 
-2. Xournal++
+### `Xournal++`
 
 You probably want to have set up at least one toolbar configuration file before actually changing it to this one, to do so you can go to:
 
