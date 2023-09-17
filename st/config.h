@@ -66,7 +66,7 @@ static uint su_timeout = 200;
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
  * attribute.
  */
-static unsigned int blinktimeout = 800;
+static unsigned int blinktimeout = 0;
 
 /*
  * thickness of underline and bar cursors
@@ -142,7 +142,7 @@ static const char *colorname[] = {
 	"#cccccc",
 	"#555555",
 	"gray90", /* default foreground colour */
-	"#090909", /* default background colour */
+	"#0E0E0E", /* default background colour */
 };
 
 
@@ -354,10 +354,11 @@ static Key key[] = {
 	{ XK_KP_Insert,     ShiftMask,      "\033[4l",      -1,    0},
 	{ XK_KP_Insert,     ControlMask,    "\033[L",       -1,    0},
 	{ XK_KP_Insert,     ControlMask,    "\033[2;5~",    +1,    0},
-	{ XK_KP_Delete,     ControlMask,    "\033[M",       -1,    0},
-	{ XK_KP_Delete,     ControlMask,    "\033[3;5~",    +1,    0},
-	{ XK_KP_Delete,     ShiftMask,      "\033[2K",      -1,    0},
-	{ XK_KP_Delete,     ShiftMask,      "\033[3;2~",    +1,    0},
+	{ XK_KP_Delete,     ControlMask,    "\033[3;5~",     0,    0},
+	{ XK_KP_Delete,     ControlMask,    "\033[3;5~",     0,    0},
+	{ XK_KP_Delete,     ControlMask,    "\033[3;5~",     0,    0},
+	{ XK_KP_Delete,     ShiftMask,      "\033[2K",       0,    0},
+	{ XK_KP_Delete,     ShiftMask,      "\033[3;2~",     0,    0},
 	{ XK_Up,            ShiftMask,      "\033[1;2A",     0,    0},
 	{ XK_Up,            Mod1Mask,       "\033[1;3A",     0,    0},
 	{ XK_Up,         ShiftMask|Mod1Mask,"\033[1;4A",     0,    0},
@@ -401,10 +402,10 @@ static Key key[] = {
 	{ XK_Insert,        ShiftMask,      "\033[2;2~",    +1,    0},
 	{ XK_Insert,        ControlMask,    "\033[L",       -1,    0},
 	{ XK_Insert,        ControlMask,    "\033[2;5~",    +1,    0},
-	{ XK_Delete,        ControlMask,    "\033[M",       -1,    0},
-	{ XK_Delete,        ControlMask,    "\033[3;5~",    +1,    0},
-	{ XK_Delete,        ShiftMask,      "\033[2K",      -1,    0},
-	{ XK_Delete,        ShiftMask,      "\033[3;2~",    +1,    0},
+	{ XK_Delete,        ControlMask,    "\033[3;5~",     0,    0},
+	{ XK_Delete,        ControlMask,    "\033[3;5~",     0,    0},
+	{ XK_Delete,        ShiftMask,      "\033[2K",       0,    0},
+	{ XK_Delete,        ShiftMask,      "\033[3;2~",     0,    0},
 	{ XK_BackSpace,     XK_NO_MOD,      "\177",          0,    0},
 	{ XK_BackSpace,     Mod1Mask,       "\033\177",      0,    0},
 	{ XK_Home,          ShiftMask,      "\033[2J",       0,   -1},
@@ -814,8 +815,8 @@ static Key key[] = {
 	{ XK_Menu,         Mod1Mask|ControlMask|ShiftMask, "\033[103;8u", 0,  0},
 	{ XK_Menu,         Mod1Mask|ShiftMask,             "\033[103;4u", 0,  0},
 	{ XK_Menu,         ShiftMask,                      "\033[103;2u", 0,  0},
-	{ XK_Delete,       XK_NO_MOD,                      "\033[3~",     -1,  0},
-	{ XK_Delete,       XK_NO_MOD,                      "\033[3~",    +1,  0},
+	{ XK_Delete,       XK_NO_MOD,                      "\033[3~",     0,  0},
+	{ XK_Delete,       XK_NO_MOD,                      "\033[3~",     0,  0},
 	{ XK_Delete,       ControlMask|ShiftMask,          "\033[255;6u", 0,  0},
 	{ XK_Delete,       Mod1Mask,                       "\033[255;3u", 0,  0},
 	{ XK_Delete,       Mod1Mask|ControlMask,           "\033[255;7u", 0,  0},

@@ -1549,7 +1549,7 @@ xdrawglyph(Glyph g, int x, int y)
 }
 
 void
-xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og)
+xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og, Line line, int len)
 {
 	Color drawcol;
 	XRenderColor colbg;
@@ -1557,7 +1557,11 @@ xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og)
 	/* remove the old cursor */
 	if (selected(ox, oy))
 		og.mode ^= ATTR_REVERSE;
-	xdrawglyph(og, ox, oy);
+
+        //part of https://github.com/LukeSmithxyz/st/pull/349 solution for wide glyphs
+        /*  Redraw the line where cursor was previously.
+        *   It will restore wide glyphs and ligatures broken by the cursor. */
+        xdrawline(line, 0, oy, len);
 
 	if (IS_SET(MODE_HIDE))
 		return;
