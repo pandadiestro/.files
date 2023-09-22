@@ -1,5 +1,7 @@
 # .files
 
+![](./.media/image-2.png)
+
 ![](./.media/image.png)
 
 Personal dotfiles and general configuration files
