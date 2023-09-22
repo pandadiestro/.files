@@ -33,32 +33,33 @@ set signcolumn=yes
 
 set guicursor=i:block
 " I use a vertical bar cursor in my terminal as default
-au VimLeave * set guicursor=a:ver100
+" au VimLeave * set guicursor=a:ver100
 
 call plug#begin()
 
 "Plug 'rafi/awesome-vim-colorschemes' "interesting colorschemes
 "Plug 'tribela/vim-transparent' "transparent bg
 "Plug 'preservim/nerdtree' "File tree plugin
-Plug 'nvim-lualine/lualine.nvim' "faster statusline
+Plug 'lewis6991/impatient.nvim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc Completion
+
+Plug 'echasnovski/mini.starter'
 
 Plug 'mg979/vim-visual-multi' "multiple cursors
 Plug 'sainnhe/gruvbox-material' "nice gruvbox material theme
 Plug 'ap/vim-css-color' "CSS Color Preview
-Plug 'ryanoasis/vim-devicons' "Developer Icons
+Plug 'nvim-tree/nvim-web-devicons' "pretty icons
 
 Plug 'lambdalisue/suda.vim' "sudo
 Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
 Plug 'pandadiestro/nvim-markdown-preview'
 Plug 'chaoren/vim-wordmotion'
 
+Plug 'nvim-lualine/lualine.nvim' "faster statusline
+
 call plug#end()
 
-"nnoremap <silent> <C-f> :NERDTreeFocus<CR>
-"nnoremap <silent> <C-t> :NERDTreeToggle<CR>
-"let NERDTreeShowHidden = 1
-"let g:NERDTreeStatusline = -1
+lua require('impatient')
 
 inoremap <silent> <C-Z> <C-O>u
 xnoremap <silent> <Tab> >gv
@@ -72,18 +73,28 @@ nmap <silent> <C-p> :bn <CR>
 noremap <C-Right> e
 inoremap <C-Right> <C-o>e<C-o>l
 
-imap <silent> <C-del> <C-o>dw
+imap <silent>   <C-BS>    <C-w>
+imap <silent>   <C-Del>   <C-o>dw
 
 let g:nvim_markdown_preview_format = 'markdown'
 let g:coc_disable_startup_warning = 1
-let g:netrw_liststyle = 3
+let g:netrw_liststyle = 0
 let g:netrw_fastbrowse = 0
 let g:netrw_altfile = 0
+let g:netrw_banner = 0
 
 autocmd FileType netrw setl bufhidden=delete
 
 nnoremap <silent> <M-w> :bw<CR>
 nnoremap <silent> <C-t> :Ex<CR>
+
+"--------devicons---------------
+lua << END
+require('nvim-web-devicons').setup{
+    color_icons = false;
+}
+END
+
 
 "---------some useful stuff-----------------
 command JSONpretty %!jq .
@@ -144,13 +155,35 @@ nmap <C-D> :t.<CR>
 " ------------ texlab config -------
 hi default CocUnderline cterm=underline gui=undercurl
 
+" --------startup config--------------
+lua << END
+require('mini.starter').setup{
+    header = [[
+⠀  ⠀   (\__/)
+       (•ㅅ•)      Don’t talk to
+    ＿ノヽ ノ＼＿      me or my son
+`/　`/ ⌒Ｙ⌒ Ｙ  ヽ     ever again.
+( 　(三ヽ人　 /　  |
+|　ﾉ⌒＼ ￣￣ヽ   ノ
+ヽ＿＿＿＞､＿_／
+     ｜( 王 ﾉ〈 (\__/)
+     /ﾐ`ー―彡\  (•ㅅ•)
+    / ╰    ╯ \  /    \>]],
+    query_updaters = '',
+    footer = [[
+
+
+"Talk is cheap. Show me the code."
+                    -Torvalds]]
+}
+END
 " ---------lualine config-----------
 lua << END
 vim.fn.matchadd('errorMsg', [[\s\+$]])
 
 require('lualine').setup{
     options = {
-        disabled_filetypes = { 'nerdtree', 'vim-plug', 'netrw' },
+        disabled_filetypes = { 'nerdtree', 'vim-plug', 'netrw', 'starter' },
         theme = 'auto',
         section_separators = '',
         component_separators = '',
@@ -170,7 +203,9 @@ require('lualine').setup{
         }
     },
     tabline = {
-        lualine_a = { 'buffers' }
+        lualine_a = {
+            'buffers'
+        }
     }
 }
 END
