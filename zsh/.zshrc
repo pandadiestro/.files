@@ -16,11 +16,15 @@ fpath=( $ZDOTDIR/plugins/zsh-completions/src $fpath )                        #ex
 zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' menu select
 
+set -o emacs
+
 # binds
-bindkey "^H" backward-kill-word     # <C-BS>
-bindkey "^[[3;5~" delete-word       # <C-Del>
-bindkey "^[[1;5C" forward-word      # <C-Right>
-bindkey "^[[1;5D" backward-word     # <C-Left>
+bindkey "^[[127;5u"     backward-delete-word  # <C-BS>
+bindkey "^[[3;5~"       delete-word         # <C-Del>
+bindkey "^[[1;5C"       forward-word        # <C-Right>
+bindkey "^[[1;5D"       backward-word       # <C-Left>
+bindkey -s "^[[1:5B"    ""
+bindkey -s "^[[13;5u"   ""
 
 # aliases
 source $ZDOTDIR/.zsh_aliases
@@ -38,13 +42,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-
-
-
-
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/bauer/.config/zsh/.zshrc'
 
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
+

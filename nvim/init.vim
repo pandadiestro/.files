@@ -37,23 +37,22 @@ set guicursor=i:block
 
 call plug#begin()
 
-"Plug 'rafi/awesome-vim-colorschemes' "interesting colorschemes
-"Plug 'tribela/vim-transparent' "transparent bg
-"Plug 'preservim/nerdtree' "File tree plugin
 Plug 'lewis6991/impatient.nvim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'} "coc Completion
 
-Plug 'echasnovski/mini.starter'
+Plug 'echasnovski/mini.starter' "minimalist start screen
 
 Plug 'mg979/vim-visual-multi' "multiple cursors
 Plug 'sainnhe/gruvbox-material' "nice gruvbox material theme
 Plug 'ap/vim-css-color' "CSS Color Preview
 Plug 'nvim-tree/nvim-web-devicons' "pretty icons
 
-Plug 'lambdalisue/suda.vim' "sudo
-Plug 'jiangmiao/auto-pairs' "autoclosing for {[()]} etc
+Plug 'lambdalisue/suda.vim' "sudo without leaving regular session
+Plug 'm4xshen/autoclose.nvim' "easier to configure autopairs
 Plug 'pandadiestro/nvim-markdown-preview'
-Plug 'chaoren/vim-wordmotion'
+Plug 'chaoren/vim-wordmotion' "better word motion for programming
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 
 Plug 'nvim-lualine/lualine.nvim' "faster statusline
 
@@ -76,12 +75,15 @@ inoremap <C-Right> <C-o>e<C-o>l
 imap <silent>   <C-BS>    <C-w>
 imap <silent>   <C-Del>   <C-o>dw
 
+let g:VM_set_statusline = 0
+let g:VM_silent_exit = 1
 let g:nvim_markdown_preview_format = 'markdown'
 let g:coc_disable_startup_warning = 1
 let g:netrw_liststyle = 0
 let g:netrw_fastbrowse = 0
 let g:netrw_altfile = 0
 let g:netrw_banner = 0
+
 
 autocmd FileType netrw setl bufhidden=delete
 
@@ -95,11 +97,30 @@ require('nvim-web-devicons').setup{
 }
 END
 
+"-----------autopairs------------
+lua << END
+require('autoclose').setup({
+    options = {
+        disable_when_touch = true,
+        touch_regex = "[%w(%[{]",
+        pair_spaces = true,
+        auto_indent = true,
+    },
+})
+END
+
 
 "---------some useful stuff-----------------
 command JSONpretty %!jq .
 command Words !wc -w %
 
+
+"---------fzf-------------
+let g:fzf_vim = {}
+let g:fzf_vim.preview_window=[]
+let g:fzf_layout = { 'down': '10' }
+let $FZF_DEFAULT_OPTS='--border=none --info=inline'
+let $FZF_DEFAULT_COMMAND="find -name \"*.*\" 2>/dev/null"
 
 "------ gruvbox colorscheme ---------
 if has('termguicolors')
@@ -177,18 +198,27 @@ require('mini.starter').setup{
                     -Torvalds]]
 }
 END
+
 " ---------lualine config-----------
 lua << END
 vim.fn.matchadd('errorMsg', [[\s\+$]])
 
 require('lualine').setup{
     options = {
-        disabled_filetypes = { 'nerdtree', 'vim-plug', 'netrw', 'starter' },
+        disabled_filetypes = { 'nerdtree', 'vim-plug', 'netrw', 'starter', 'fzf' },
         theme = 'auto',
         section_separators = '',
         component_separators = '',
     },
     sections = {
+        lualine_a = {
+            {
+                'mode',
+                fmt = function(mode)
+                return vim.b['visual_multi'] and mode .. ' - MULTI' or mode
+                end
+            }
+        },
         lualine_b = {
             'branch',
             'diff',

@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 #include <ctype.h>
 #include <locale.h>
+#include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,6 +56,7 @@ static struct item *items = NULL;
 static struct item *matches, *matchend;
 static struct item *prev, *curr, *next, *sel;
 static int mon = -1, screen;
+static bool sortmatches = true;
 
 static Atom clip, utf8;
 static Display *dpy;
@@ -383,13 +385,22 @@ match(void)
 				break;
 		if (i != tokc) /* not all tokens match */
 			continue;
-		/* exact matches go first, then prefixes, then substrings */
-		if (!tokc || !fstrncmp(text, item->text, textsize))
+
+		if (!sortmatches)
 			appenditem(item, &matches, &matchend);
-		else if (!fstrncmp(tokv[0], item->text, len))
-			appenditem(item, &lprefix, &prefixend);
-		else
-			appenditem(item, &lsubstr, &substrend);
+		else {
+            if (!sortmatches)
+				appenditem(item, &matches, &matchend);
+            else {
+                /* exact matches go first, then prefixes, then substrings */
+                if (!tokc || !fstrncmp(text, item->text, textsize))
+                    appenditem(item, &matches, &matchend);
+                else if (!fstrncmp(tokv[0], item->text, len))
+                    appenditem(item, &lprefix, &prefixend);
+                else
+                    appenditem(item, &lsubstr, &substrend);
+            }
+		}
 	}
 	if (lprefix) {
 		if (matches) {
@@ -982,7 +993,7 @@ setup(void)
 static void
 usage(void)
 {
-	die("usage: dmenu [-bfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
+	die("usage: dmenu [-bfivS] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
 	      "             [-x xoffset] [-y yoffset] [-z width]\n"
 	    "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
 }
@@ -1002,6 +1013,8 @@ main(int argc, char *argv[])
 			topbar = 0;
 		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
 			fast = 1;
+		else if (!strcmp(argv[i], "-S"))   /* do not sort matches */
+			sortmatches = false;
 		else if (!strcmp(argv[i], "-F"))   /* grabs keyboard before reading stdin */
 			fuzzy = 0;
 		else if (!strcmp(argv[i], "-c"))   /* centers dmenu on screen */
