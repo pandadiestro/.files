@@ -1,3 +1,9 @@
+################
+# acpi hotkeys
+################
+
+
+
 ###########################
 # wm independent hotkeys
 ###########################
@@ -5,21 +11,25 @@
 # terminal emulator
 alt + t
 	exo-open --launch TerminalEmulator
-
-# whisker menu
+# app launcher
 super + a
-	bspc rule -a \* -o state=floating && xfce4-appfinder
+    j4-dmenu-desktop --dmenu="dmenu -c -l 10 -z 300"
+#	bspc rule -a \* -o state=floating && xfce4-appfinder
+
+super + b
+    /home/bauer/projects/dmenu_utils/dmenu_utils.sh
+
 # thunar
 alt + f
 	thunar
 
 # screenshotter
 alt + shift + s
-    xfce4-screenshooter -r -c
+    maim -u -s | xclip -selection clipboard -t image/png
 
 # clipboard
 alt + v
-   xfce4-popup-clipman
+   clipmenu -c -l 10 -z 300
 
 # boomer
 super + space
