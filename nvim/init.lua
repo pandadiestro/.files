@@ -2,7 +2,7 @@ vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 
-vim.opt.autoindent = true
+vim.opt.cindent = true
 vim.opt.expandtab = true
 
 vim.opt.shiftwidth = 4
@@ -16,14 +16,16 @@ vim.opt.hidden = true
 vim.opt.mouse = "a"
 vim.opt.keymodel = "startsel"
 
+vim.api.nvim_set_hl(0, "CocUnderline", { cterm=underline })
+
 -- May need for Vim (not Neovim) since coc.nvim
 -- calculates byte offset by count utf-8 byte sequence
 
 vim.opt.encoding = "utf-8"
 
 -- set to not generate backups to prevent problems
-vim.cmd('set nobackup')
-vim.cmd('set nowritebackup')
+vim.cmd("set nobackup")
+vim.cmd("set nowritebackup")
 
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
@@ -38,60 +40,59 @@ vim.opt.guicursor = "i:block"
 local globalopts = {noremap = true, silent = true}
 
 -- Basic mappings
-vim.keymap.set("i", "<C-Z>", "<C-o>u", globalopts)
+vim.keymap.set("i", "<C-Right>", "<C-o>e<C-o>a", globalopts)
+vim.keymap.set("n", "<C-Right>", "e", globalopts)
+vim.keymap.set("x", "<C-Right>", "e", globalopts)
+
+vim.keymap.set("i", "<C-Left>", "<C-o>b", globalopts)
+vim.keymap.set("n", "<C-Left>", "b", globalopts)
+vim.keymap.set("x", "<C-Left>", "b", globalopts)
+
+vim.keymap.set("i", "<C-z>", "<C-o>u", globalopts)
+vim.keymap.set("i", "<C-y>", "<C-o><C-r>", globalopts)
 
 vim.keymap.set("x", "<Tab>", ">gv", globalopts)
 vim.keymap.set("x", "<S-Tab>", "<gv", globalopts)
 vim.keymap.set("x", "<BS>", "x", globalopts)
-
-
 vim.keymap.set("n", "<C-o>", ":bp <CR>", globalopts)
 vim.keymap.set("n", "<C-p>", ":bn <CR>", globalopts)
-vim.keymap.set("n", "<C-Right>", "e", globalopts)
 vim.keymap.set("n", "<M-w>", ":bw<CR>", globalopts)
 vim.keymap.set("n", "<C-t>", ":Ex<CR>", globalopts)
 
-vim.keymap.set("i", "<C-Right>", "<C-o>e<C-o>a", globalopts)
 vim.keymap.set("i", "<C-BS>", "<C-w>", globalopts)
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", globalopts)
 --
 
 -- Actually cool mappings
-
-
 -- duplicate lines in normal mode
 vim.keymap.set("n", "<C-d>", ":t.<CR>", globalopts)
 --
 
--- Loading plugins
-vim.call('plug#begin', '~/.local/share/nvim/plugged')
+require "paq" {
+    'savq/paq-nvim',                        -- paq self management
+    'tpope/vim-sensible',                   -- nice defaults
+    'lewis6991/impatient.nvim',             -- perf improvements for the impatient
+    'neoclide/coc.nvim',                    -- coc Completion
 
-vim.fn['plug#'] 'tpope/vim-sensible'
-vim.fn['plug#'] 'lewis6991/impatient.nvim'
-vim.fn['plug#'] 'neoclide/coc.nvim' --coc Completion
+    'echasnovski/mini.starter',             -- minimalist start screen
 
-vim.fn['plug#'] 'echasnovski/mini.starter' -- minimalist start screen
+    'mg979/vim-visual-multi',               -- multiple cursors
+    'sainnhe/gruvbox-material',             -- nice gruvbox material theme
+    'norcalli/nvim-colorizer.lua',          -- CSS color preview
+    'nvim-tree/nvim-web-devicons',          -- pretty icons
 
-vim.fn['plug#'] 'mg979/vim-visual-multi' -- multiple cursors
-vim.fn['plug#'] 'sainnhe/gruvbox-material' -- nice gruvbox material theme
-vim.fn['plug#'] 'ap/vim-css-color' -- CSS Color Preview
-vim.fn['plug#'] 'nvim-tree/nvim-web-devicons' -- pretty icons
+    'lambdalisue/suda.vim',                 -- sudo without leaving regular session
+    'm4xshen/autoclose.nvim',               -- easier to configure autopairs
+    'pandadiestro/nvim-markdown-preview',   -- my fork of the in-browser markdown preview plugin
+    'chaoren/vim-wordmotion',               -- better word motion for programming
 
-vim.fn['plug#'] 'lambdalisue/suda.vim' -- sudo without leaving regular session
-vim.fn['plug#'] 'm4xshen/autoclose.nvim' -- easier to configure autopairs
-vim.fn['plug#'] 'pandadiestro/nvim-markdown-preview'
-vim.fn['plug#'] 'chaoren/vim-wordmotion' -- better word motion for programming
-
-vim.fn['plug#'] 'nvim-lualine/lualine.nvim' -- faster statusline
-
-vim.call('plug#end')
---
+    'nvim-lualine/lualine.nvim',            -- faster statusline
+}
 
 -- Useful commands
 vim.api.nvim_create_user_command('Words', '!wc -w %', { nargs='?' })
 vim.api.nvim_create_user_command('JSONpretty', '%!jq .', { nargs='?' })
 --
-
 
 -- Some important global variables
 vim.g.mapleader = ' '
@@ -109,29 +110,30 @@ vim.g['netrw_altfile'] = 0
 vim.g['netrw_banner'] = 0
 
 vim.cmd('autocmd FileType netrw setl bufhidden=delete')
-
 --
 
 -- Useful stuff
-vim.fn.matchadd('errorMsg', [[\s\+$]]) -- detect trailing
+vim.fn.matchadd('errorMsg', [[\s\+$]]) -- detect trailing spaces
 --
 
 require('impatient')
 
-require('nvim-web-devicons').setup{
+require('nvim-web-devicons').setup {
     color_icons = false;
 }
 
-require('autoclose').setup({
+require('colorizer').setup()
+
+require('autoclose').setup {
     options = {
         disable_when_touch = true,
-        touch_regex = "[%w(%[{]",
+        touch_regex = "[%w(%[{,\"\']",
         pair_spaces = true,
         auto_indent = true,
     },
-})
+}
 
-require('mini.starter').setup{
+require('mini.starter').setup {
     header = [[
 ⠀  ⠀   (\__/)
        (•ㅅ•)      Don’t talk to
@@ -151,7 +153,7 @@ require('mini.starter').setup{
                     -Torvalds]]
 }
 
-require('lualine').setup{
+require('lualine').setup {
     options = {
         disabled_filetypes = { 'nerdtree', 'vim-plug', 'netrw', 'starter', 'fzf' },
         theme = 'auto',
@@ -209,9 +211,43 @@ function swap_down()
         return ":m '<-2<CR>gv=gv"
     end
 end
+
+-- the only remaining important part
+-- of my old config without a proper
+-- port in lua, TODO
+
+vim.cmd([[
+    function! s:swap_lines(n1, n2)
+        let line1 = getline(a:n1)
+        let line2 = getline(a:n2)
+        call setline(a:n1, line2)
+        call setline(a:n2, line1)
+    endfunction
+
+    function! s:swap_up()
+        let n = line('.')
+        if n == 1
+            return
+        endif
+
+        call s:swap_lines(n, n - 1)
+        exec n - 1
+    endfunction
+
+    function! s:swap_down()
+        let n = line('.')
+        if n == line('$')
+            return
+        endif
+
+        call s:swap_lines(n, n + 1)
+        exec n + 1
+    endfunction
+
+    noremap <silent> <c-s-up> :call <SID>swap_up()<CR>
+    noremap <silent> <c-s-down> :call <SID>swap_down()<CR>
+]])
 --
-
-
 
 -- gruvbox material variables
 vim.g['gruvbox_material_foreground'] = 'mix'
@@ -222,19 +258,6 @@ vim.g['gruvbox_material_current_word'] = 'bold'
 
 vim.cmd('colorscheme gruvbox-material')
 --
-
--- texlab config
-vim.cmd('hi default CocUnderline cterm=underline gui=undercurl')
---
-
--- FZF config
--- vim.g['fzf_vim'] = {}
--- vim.g['fzf_vim.preview_window'] = nil
--- vim.g['fzf_layout'] = { down = '10' }
--- vim.env.FZF_DEFAULT_OPTS = '--border=none --info=inline'
--- vim.env.FZF_DEFAULT_COMMAND = "find -name \"*.*\" 2>/dev/null"
---
-
 
 -- Stolen coc config hehe
 local keyset = vim.keymap.set
