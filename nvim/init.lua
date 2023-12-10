@@ -99,10 +99,50 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 --
 
+-- swap lines
+-- multiline movement support thanks to LunarVim
+vim.keymap.set("v", "<C-S-Up>", ":m '<-2<CR>gv=gv", globalopts)
+vim.keymap.set("v", "<C-S-Down>", ":m '>+1<CR>gv=gv", globalopts)
+
+local api = vim.api
+
+function swap_lines(n1, n2)
+    local line1 = api.nvim_buf_get_lines(0, n1 - 1, n1, false)[1]
+    local line2 = api.nvim_buf_get_lines(0, n2 - 1, n2, false)[1]
+    api.nvim_buf_set_lines(0, n1 - 1, n1, false, { line2 })
+    api.nvim_buf_set_lines(0, n2 - 1, n2, false, { line1 })
+end
+
+function swap_up()
+    local n = api.nvim_win_get_cursor(0)[1]
+    if n == 1 then
+        return
+    end
+
+    swap_lines(n, n - 1)
+    api.nvim_win_set_cursor(0, { n - 1, 0 })
+end
+
+function swap_down()
+    local n = api.nvim_win_get_cursor(0)[1]
+    local last_line = api.nvim_buf_line_count(0)
+    if n == last_line then
+        return
+    end
+
+    swap_lines(n, n + 1)
+    api.nvim_win_set_cursor(0, { n + 1, 0 })
+end
+
+vim.keymap.set("n", "<C-S-Up>", "<CMD>lua swap_up()<CR>", globalopts)
+vim.keymap.set("n", "<C-S-Down>", "<CMD>lua swap_down()<CR>", globalopts)
+--
+
 -- Useful stuff
 vim.fn.matchadd('errorMsg', [[\s\+$]]) -- detect trailing spaces
 --
 
+-- Plugins
 require "paq" {
     'savq/paq-nvim',                        -- paq self management
     'lewis6991/impatient.nvim',             -- perf improvements for the impatient
@@ -204,48 +244,6 @@ vim.g['gruvbox_material_current_word'] = 'bold'
 
 vim.api.nvim_exec('colorscheme gruvbox-material', false)
 --
-
--- swap lines
--- multiline movement support thanks to LunarVim
-
-vim.keymap.set("v", "<C-S-Up>", ":m '<-2<CR>gv=gv", globalopts)
-vim.keymap.set("v", "<C-S-Down>", ":m '>+1<CR>gv=gv", globalopts)
-
--- the only remaining important part
--- of my old config without a proper
--- port in lua, TODO
-vim.api.nvim_exec([[
-    function! s:swap_lines(n1, n2)
-        let line1 = getline(a:n1)
-        let line2 = getline(a:n2)
-        call setline(a:n1, line2)
-        call setline(a:n2, line1)
-    endfunction
-
-    function! s:swap_up()
-        let n = line('.')
-        if n == 1
-            return
-        endif
-
-        call s:swap_lines(n, n - 1)
-        exec n - 1
-    endfunction
-
-    function! s:swap_down()
-        let n = line('.')
-        if n == line('$')
-            return
-        endif
-
-        call s:swap_lines(n, n + 1)
-        exec n + 1
-    endfunction
-
-    nnoremap <silent> <c-s-up> :call <SID>swap_up()<CR>
-    nnoremap <silent> <c-s-down> :call <SID>swap_down()<CR>
-]], false)
-
 
 -- Stolen coc config hehe
 local keyset = vim.keymap.set
