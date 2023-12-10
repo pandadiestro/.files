@@ -1,41 +1,42 @@
-vim.opt.termguicolors = true
-vim.opt.number = true
-vim.opt.relativenumber = true
+require('impatient')
 
-vim.opt.cindent = true
-vim.opt.expandtab = true
+vim.o.termguicolors = true
+vim.o.number = true
+vim.o.relativenumber = true
 
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
+vim.o.smartindent = true
+vim.o.expandtab = true
 
-vim.opt.backspace = "2"
-vim.opt.clipboard = "unnamed,unnamedplus"
+vim.o.shiftwidth = 4
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
 
-vim.opt.hidden = true
-vim.opt.mouse = "a"
-vim.opt.keymodel = "startsel"
+vim.o.backspace = "2"
+vim.o.clipboard = "unnamed,unnamedplus"
+
+vim.o.hidden = true
+vim.o.mouse = "a"
+vim.o.keymodel = "startsel"
 
 vim.api.nvim_set_hl(0, "CocUnderline", { cterm=underline })
 
 -- May need for Vim (not Neovim) since coc.nvim
 -- calculates byte offset by count utf-8 byte sequence
-
-vim.opt.encoding = "utf-8"
+vim.o.encoding = "utf-8"
 
 -- set to not generate backups to prevent problems
-vim.cmd("set nobackup")
-vim.cmd("set nowritebackup")
+vim.o.backup = false
+vim.o.writebackup = false
 
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
-vim.opt.updatetime = 300
+vim.o.updatetime = 300
 
 -- Always show the signcolumn, otherwise it would shift the text each time
 -- diagnostics appear/become resolved
 
-vim.opt.signcolumn = "yes"
-vim.opt.guicursor = "i:block"
+vim.o.signcolumn = "yes"
+vim.o.guicursor = "i:block"
 
 local globalopts = {noremap = true, silent = true}
 
@@ -61,6 +62,8 @@ vim.keymap.set("n", "<C-t>", ":Ex<CR>", globalopts)
 
 vim.keymap.set("i", "<C-BS>", "<C-w>", globalopts)
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", globalopts)
+
+vim.keymap.set("t", "<Esc>", "<C-\\><C-N>", globalopts)
 --
 
 -- Actually cool mappings
@@ -68,29 +71,8 @@ vim.keymap.set("i", "<C-Del>", "<C-o>dw", globalopts)
 vim.keymap.set("n", "<C-d>", ":t.<CR>", globalopts)
 --
 
-require "paq" {
-    'savq/paq-nvim',                        -- paq self management
-    'tpope/vim-sensible',                   -- nice defaults
-    'lewis6991/impatient.nvim',             -- perf improvements for the impatient
-    'neoclide/coc.nvim',                    -- coc Completion
-
-    'echasnovski/mini.starter',             -- minimalist start screen
-
-    'mg979/vim-visual-multi',               -- multiple cursors
-    'sainnhe/gruvbox-material',             -- nice gruvbox material theme
-    'norcalli/nvim-colorizer.lua',          -- CSS color preview
-    'nvim-tree/nvim-web-devicons',          -- pretty icons
-
-    'lambdalisue/suda.vim',                 -- sudo without leaving regular session
-    'm4xshen/autoclose.nvim',               -- easier to configure autopairs
-    'pandadiestro/nvim-markdown-preview',   -- my fork of the in-browser markdown preview plugin
-    'chaoren/vim-wordmotion',               -- better word motion for programming
-
-    'nvim-lualine/lualine.nvim',            -- faster statusline
-}
-
 -- Useful commands
-vim.api.nvim_create_user_command('Words', '!wc -w %', { nargs='?' })
+vim.api.nvim_create_user_command('Words', '!wc -w "%"', { nargs='?' })
 vim.api.nvim_create_user_command('JSONpretty', '%!jq .', { nargs='?' })
 --
 
@@ -109,14 +91,38 @@ vim.g['netrw_fastbrowse'] = 0
 vim.g['netrw_altfile'] = 0
 vim.g['netrw_banner'] = 0
 
-vim.cmd('autocmd FileType netrw setl bufhidden=delete')
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = 'netrw',
+    callback = function()
+        vim.opt_local.bufhidden = 'delete'
+    end
+})
 --
 
 -- Useful stuff
 vim.fn.matchadd('errorMsg', [[\s\+$]]) -- detect trailing spaces
 --
 
-require('impatient')
+require "paq" {
+    'savq/paq-nvim',                        -- paq self management
+    'lewis6991/impatient.nvim',             -- perf improvements for the impatient
+    'tpope/vim-sensible',                   -- nice defaults
+    'neoclide/coc.nvim',                    -- coc Completion
+
+    'echasnovski/mini.starter',             -- minimalist start screen
+
+    'mg979/vim-visual-multi',               -- multicursors
+    'sainnhe/gruvbox-material',             -- nice gruvbox material theme
+    'NvChad/nvim-colorizer.lua',            -- CSS color preview
+    'nvim-tree/nvim-web-devicons',          -- pretty icons
+
+    'lambdalisue/suda.vim',                 -- sudo without leaving regular session
+    'm4xshen/autoclose.nvim',               -- easier to configure autopairs
+    'pandadiestro/nvim-markdown-preview',   -- my fork of the in-browser markdown preview plugin
+    'chaoren/vim-wordmotion',               -- better word motion for programming
+
+    'nvim-lualine/lualine.nvim',            -- faster statusline
+}
 
 require('nvim-web-devicons').setup {
     color_icons = false;
@@ -136,15 +142,15 @@ require('autoclose').setup {
 require('mini.starter').setup {
     header = [[
 ⠀  ⠀   (\__/)
-       (•ㅅ•)      Don’t talk to
+       (•ㅅ•)          Don’t talk to
     ＿ノヽ ノ＼＿      me or my son
-`/　`/ ⌒Ｙ⌒ Ｙ  ヽ     ever again.
-( 　(三ヽ人　 /　  |
+`/　`/  ⌒Ｙ⌒  Ｙ ヽ     ever again.
+( 　(三ヽ人　 /　 |
 |　ﾉ⌒＼ ￣￣ヽ   ノ
 ヽ＿＿＿＞､＿_／
      ｜( 王 ﾉ〈 (\__/)
      /ﾐ`ー―彡\  (•ㅅ•)
-    / ╰    ╯ \  /    \>]],
+    / ╰    ╯  \ /    \>]],
     query_updaters = '',
     footer = [[
 
@@ -156,9 +162,10 @@ require('mini.starter').setup {
 require('lualine').setup {
     options = {
         disabled_filetypes = { 'nerdtree', 'vim-plug', 'netrw', 'starter', 'fzf' },
-        theme = 'auto',
+        theme = 'gruvbox-material',
         section_separators = '',
         component_separators = '',
+        globalstatus = true
     },
     sections = {
         lualine_a = {
@@ -176,47 +183,38 @@ require('lualine').setup {
                 'diagnostics',
                 sources = { 'nvim_diagnostic', 'coc' },
                 sections = { 'error', 'warn', 'info', 'hint' },
-                symbols = {error = 'E~', warn = 'W~', info = 'I~', hint = 'H~'},
+                symbols = { error = 'E~', warn = 'W~', info = 'I~', hint = 'H~' },
                 update_in_insert = true,
                 colored = false
             }
-        }
+        },
+        lualine_y = {  }
     },
     tabline = {
-        lualine_a = {
-            'buffers'
-        }
+        lualine_a = { 'buffers' }
     }
 }
 
+-- gruvbox material variables
+vim.g['gruvbox_material_foreground'] = 'mix'
+vim.g['gruvbox_material_disable_italic_comment'] = 1
+vim.g['gruvbox_material_transparent_background'] = 1
+vim.g['gruvbox_material_better_performance'] = 1
+vim.g['gruvbox_material_current_word'] = 'bold'
+
+vim.api.nvim_exec('colorscheme gruvbox-material', false)
+--
+
 -- swap lines
 -- multiline movement support thanks to LunarVim
+
 vim.keymap.set("v", "<C-S-Up>", ":m '<-2<CR>gv=gv", globalopts)
 vim.keymap.set("v", "<C-S-Down>", ":m '>+1<CR>gv=gv", globalopts)
-
-function swap_up()
-    local r, n = unpack(vim.api.nvim_win_get_cursor(0))
-    if r == 1 then
-        return
-    else
-        return ":m '>+1<CR>gv=gv"
-    end
-end
-
-function swap_down()
-    local r, n = unpack(vim.api.nvim_win_get_cursor(0))
-    if r == 1 then
-        return
-    else
-        return ":m '<-2<CR>gv=gv"
-    end
-end
 
 -- the only remaining important part
 -- of my old config without a proper
 -- port in lua, TODO
-
-vim.cmd([[
+vim.api.nvim_exec([[
     function! s:swap_lines(n1, n2)
         let line1 = getline(a:n1)
         let line2 = getline(a:n2)
@@ -244,20 +242,10 @@ vim.cmd([[
         exec n + 1
     endfunction
 
-    noremap <silent> <c-s-up> :call <SID>swap_up()<CR>
-    noremap <silent> <c-s-down> :call <SID>swap_down()<CR>
-]])
---
+    nnoremap <silent> <c-s-up> :call <SID>swap_up()<CR>
+    nnoremap <silent> <c-s-down> :call <SID>swap_down()<CR>
+]], false)
 
--- gruvbox material variables
-vim.g['gruvbox_material_foreground'] = 'mix'
-vim.g['gruvbox_material_disable_italic_comment'] = 1
-vim.g['gruvbox_material_transparent_background'] = 1
-vim.g['gruvbox_material_better_performance'] = 1
-vim.g['gruvbox_material_current_word'] = 'bold'
-
-vim.cmd('colorscheme gruvbox-material')
---
 
 -- Stolen coc config hehe
 local keyset = vim.keymap.set
@@ -433,10 +421,4 @@ keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
 -- Resume latest coc list
 keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 --
-
-
-
-
-
-
 

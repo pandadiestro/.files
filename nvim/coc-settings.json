@@ -1,5 +1,12 @@
 {
     "texlab.build.executable": "pdflatex",
+    "texlab.build.args": [
+      "-pdf",
+      "-interaction=nonstopmode",
+      "-synctex=1",
+      "-shell-escape",
+      "%f"
+    ],
     "texlab.build.onSave": true,
     "texlab.build.forwardSearchAfter": true,
     "diagnostic.refreshOnInsertMode": true,

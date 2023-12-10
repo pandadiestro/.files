@@ -1,3 +1,3 @@
-vim.cmd("set noexpandtab")
+vim.cmd("setlocal noexpandtab")
 vim.cmd("retab")
 
