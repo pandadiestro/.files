@@ -42,7 +42,7 @@ And add a custom one.
 
 ### `ST`
 
-This is a heavily patched gruvbox-ish st distribution which implements the patches at `./st/patches`
+[My st distribution is currently maintained here](https://gitlab.com/PandaDiestro/st-distr)
 
 ### `dmenu`
 
