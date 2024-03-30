@@ -2,22 +2,16 @@
 # acpi hotkeys
 ################
 
-
-
 ###########################
 # wm independent hotkeys
 ###########################
 
 # terminal emulator
 alt + t
-	exo-open --launch TerminalEmulator
+	st
 # app launcher
 super + a
     j4-dmenu-desktop --dmenu="dmenu -c -l 10 -z 300"
-#	bspc rule -a \* -o state=floating && xfce4-appfinder
-
-super + b
-    /home/bauer/projects/dmenu_utils/dmenu_utils.sh
 
 # thunar
 alt + f
@@ -33,7 +27,7 @@ alt + v
 
 # boomer
 super + space
-    /home/bauer/.local/bin/boomer
+    /home/bauer/clones/boomer/boomer
 
 
 ###########################
@@ -49,16 +43,12 @@ alt + b
 	pkill docky; /home/xfcebspwm/.config/bspwm/bspwmrc; docky
 
 # close window
-alt + q
+alt  + q
 	bspc node -c
 
 # move focused window to the next workspace and then switch to that workspace
 alt + shift + {Left,Right}
 	id=$(bspc query --nodes --node); bspc node --to-desktop {prev,next}; bspc desktop --focus next; bspc node --focus ${id}
-
-# set the node flag to private
-#alt + p
-#bspc node -g private
 
 
 # shrink/expand the windows
@@ -110,7 +100,6 @@ alt + {F9,F10,F11,F12}
 # === focus/swap ===
 
 # focus the next/previous node
-#alt + {_, shift +}Tab
 alt + {Up, Down}
 	bspc node -f {prev,next}.local.!above
 

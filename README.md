@@ -1,8 +1,8 @@
 # .files
 
-![](./.media/image-2.png)
+![](./.media/bg_showcase.jpg)
 
-![](./.media/image.png)
+![](./.media/bg_apps.jpg)
 
 Personal dotfiles and general configuration files
 
@@ -10,27 +10,20 @@ Personal dotfiles and general configuration files
 
 ### `Neovim`
 
-This version of my neovim init.vim uses both the [paq-nvim](https://github.com/savq/paq-nvim) plugin manager and [conqueror of completion](https://github.com/neoclide/coc.nvim) (*soon to be changed to the native lsp engine for performance reasons*), so be sure to have both of them set up before starting.
+This version of my neovim config uses both the [paq-nvim](https://github.com/savq/paq-nvim) plugin manager and the native lsp engine (with [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)), so be sure to have paq set up before starting. These are my currently set up language servers, you will need to set these up beforehand:
 
-In the first run there will probably be a lot of red errors and panics exploding in your face. This is normal, you still haven't installed any plugin at all, so run:
+- ccls
+- gopls
+- tsserver
+- typst\_lsp
+
+In the first run there will probably be a lot of red errors and panics exploding in your face. This is normal as you still haven't installed any plugin at all, so run:
 
 ```
 :PaqInstall
 ```
 
-And then reopen neovim or resource the config file. After that, you should change your `g:coc_node_path` to whatever the output of `where node` is (assuming you have a special node.js bin already installed, if you already have it in your `$PATH` then coc should automatically detect its location).
-
-My currently installed lsp servers are:
-
-1. coc-json
-2. coc-tsserver
-3. coc-r-slp
-4. coc-pyright
-5. coc-java
-6. coc-go
-7. coc-texlab
-*ccls was set up as a separate bin, not as a coc plugin*
-8. ccls
+And then reopen neovim or resource the config file.
 
 ### `Xournal++`
 
