@@ -1,8 +1,6 @@
 # .files
 
-![](./.media/bg_showcase.jpg)
-
-![](./.media/bg_apps.jpg)
+![](./.media/bg.png)
 
 Personal dotfiles and general configuration files
 
@@ -10,17 +8,10 @@ Personal dotfiles and general configuration files
 
 ### `Neovim`
 
-This version of my neovim config uses both the [paq-nvim](https://github.com/savq/paq-nvim) plugin manager and the native lsp engine (with [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)), so be sure to have paq set up before starting. These are my currently set up language servers, you will need to set these up beforehand:
-
-- ccls
-- gopls
-- tsserver
-- typst\_lsp
-
-In the first run there will probably be a lot of red errors and panics exploding in your face. This is normal as you still haven't installed any plugin at all, so run:
+This version of my neovim config uses both the [paq-nvim](https://github.com/savq/paq-nvim) plugin manager and the native lsp engine (with [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)), so be sure to have paq set up before starting. In the first run there will probably be a lot of red errors and panics exploding in your face. This is normal as you still haven't installed any plugin at all, so run:
 
 ```
-:PaqInstall
+:PaqSync
 ```
 
 And then reopen neovim or resource the config file.
