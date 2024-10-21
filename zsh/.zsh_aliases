@@ -1,0 +1,10 @@
+alias ufetch="sh /home/bauer/Projects/ufetch/ufetch.sh"
+alias pfetch="sh /home/bauer/clones/pfetch/pfetch"
+alias pdfweb="sh /home/bauer/Projects/webpdfopen/webpdfopen.sh"
+alias ls="exa --group-directories-first --icons"
+alias la="ls --all"
+alias nvimconf="nvim ~/.config/nvim/init.vim"
+alias gz='cd $(find . -type d -print | fzf)'
+alias nz='cd $(dirname $(find . | fzf)) && nvim .'
+alias nv='nvim'
+

@@ -1,0 +1,5 @@
+setopt autocd
+setopt HIST_SAVE_NO_DUPS
+
+export WORDCHARS=''
+

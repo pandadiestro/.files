@@ -1,0 +1,10 @@
+set selection-clipboard clipboard
+
+set show-recent 1
+set show-hidden true
+set highlight-active-color "#FEE435"
+set highlight-color "#FEE534"
+
+set guioptions ""
+set font "MesloLGS\ NF 10"
+

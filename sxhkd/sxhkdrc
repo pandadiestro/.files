@@ -1,0 +1,108 @@
+################
+# acpi hotkeys
+################
+
+###########################
+# wm independent hotkeys
+###########################
+
+# terminal emulator
+alt + t
+	st
+# app launcher
+super + a
+    j4-dmenu-desktop --dmenu="dmenu -c -l 10 -z 300"
+
+# thunar
+alt + f
+	thunar
+
+# screenshotter
+alt + shift + s
+    maim -u -s | xclip -selection clipboard -t image/png
+
+# clipboard
+alt + v
+   clipmenu -c -l 10 -z 300
+
+# boomer
+super + space
+    /home/bauer/clones/boomer/boomer
+
+
+###########################
+# bspwm hotkeys
+###########################
+
+# make sxhkd reload its configuration files
+alt + Escape
+	pkill -USR1 -x sxhkd
+
+# reload bspwmrc configuration file
+alt + b
+	pkill docky; /home/xfcebspwm/.config/bspwm/bspwmrc; docky
+
+# close window
+alt  + q
+	bspc node -c
+
+# move focused window to the next workspace and then switch to that workspace
+alt + shift + {Left,Right}
+	id=$(bspc query --nodes --node); bspc node --to-desktop {prev,next}; bspc desktop --focus next; bspc node --focus ${id}
+
+
+# shrink/expand the windows
+ctrl + alt + h
+	bspc node -z {left -20 0} || bspc node -z {right -20 0}
+ctrl + alt + j
+	bspc node -z {bottom 0 20} || bspc node -z {top 0 20}
+ctrl + alt + k
+	bspc node -z {bottom 0 -20} || bspc node -z {top 0 -20}
+ctrl + alt + l
+	bspc node -z {left 20 0} || bspc node -z {right 20 0}
+
+
+
+# === function keys ===
+
+# rotate windows
+alt + F1
+	bspc node @/ -R 90
+
+# circulate windows
+alt + F2
+	bspc node @/ -C forward
+
+# flip windows horizontal
+alt + F3
+	bspc node @/ -F horizontal
+
+# flip windows vertical
+alt + F4
+	bspc node @/ -F vertical
+
+# alternate between the tiled and monocle layout
+alt + F5
+	bspc desktop -l next
+
+# balance windows
+alt + F6
+	bspc node @/ -B
+
+# Change window gap
+alt + {F7,F8}
+	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+
+# set the window state
+alt + {F9,F10,F11,F12}
+	bspc node -t {floating,tiled,pseudo_tiled,fullscreen}
+
+# === focus/swap ===
+
+# focus the next/previous node
+alt + {Up, Down}
+	bspc node -f {prev,next}.local.!above
+
+# focus the next/previous desktop
+alt + {Left,Right}
+	bspc desktop -f {prev,next}
